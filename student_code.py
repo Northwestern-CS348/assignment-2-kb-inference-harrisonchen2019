@@ -128,7 +128,50 @@ class KnowledgeBase(object):
         printv("Retracting {!r}", 0, verbose, [fact])
         ####################################################
         # Student code goes here
-        
+
+        if fact.asserted and len(fact.supported_by) == 0:
+            queue = [fact]
+
+            while len(queue) > 0:
+                print(queue)
+                temp = []
+                for f in self.facts: # index through facts
+                    for i in range(len(f.supported_by)): # index through supported_by within each fact
+                        if queue[0] in f.supported_by[i]: # check first element in the pair
+                            f.supported_by.pop(i) # remove corresponding fact/rule pair
+                            temp.append(f)
+
+                for r in self.rules: # index through rules
+                    for i in range(len(r.supported_by)): # index through supported_by within each rule
+                        if queue[0] in r.supported_by[i]: # check second element in the pair
+                            r.supported_by.pop(i) # remove corresponding fact/rule pair
+                            temp.append(r)
+
+                for i in range(len(temp)):
+                    # check to see if they don't meet requirements to be removed
+                    if len(temp[i].supported_by) != 0:
+                        temp[i] == False
+                    elif type(temp[i]) == Rule and temp[i].asserted == True:
+                        temp[i] == False
+                    # if they pass all checks, add it to the end of the list
+                    if temp[i]:
+                        queue.append(temp[i])
+
+                # delete the current fact/rule from the kb
+                if type(queue[0]) == Fact:
+                    print(type(queue[0]))
+
+                    for i in range(len(self.facts)):
+                        if queue[0] == self.facts[i]:
+                            self.facts.pop(i)
+
+                if type(queue[0]) == Rule:
+                    for i in range(len(self.rules)):
+                        if queue[0] == self.rules[i]:
+                            self.rules.pop(i)
+
+                # remove from the queue
+                queue = queue[1:]
 
 class InferenceEngine(object):
     def fc_infer(self, fact, rule, kb):
@@ -140,9 +183,59 @@ class InferenceEngine(object):
             kb (KnowledgeBase) - A KnowledgeBase
 
         Returns:
-            Nothing            
+            Nothing
         """
         printv('Attempting to infer from {!r} and {!r} => {!r}', 1, verbose,
             [fact.statement, rule.lhs, rule.rhs])
         ####################################################
         # Student code goes here
+
+        if match(fact.statement, rule.lhs[0], None):
+
+            bind_new = match(fact.statement, rule.lhs[0], None) # hold bindings
+            # print('BINDINGS:' + str(bind_new))
+
+            #set rhs, lhs
+            rhs_new = instantiate(rule.rhs, bind_new)
+            lhs_new = rule.lhs[1:]
+
+            if len(lhs_new) == 0: # this is when we need to make a fact, not a rule
+                fact_new = Fact(rhs_new,[[fact, rule]])
+                '''
+                repeat = False
+                for i in range(len(kb.facts)):
+                    if fact_new == kb.facts[i]:
+                        repeat = True
+                if not repeat:
+                    kb.facts.append(fact_new)
+                '''
+
+                kb.kb_assert(fact_new)
+                # print('FACT ADDED:' + str(fact_new))
+
+                fact.supports_facts.append(fact_new)
+                rule.supports_rules.append(fact_new)
+
+            else: # make a new rule
+                for i in range(len(lhs_new)):
+                    lhs_new[i] = instantiate(lhs_new[i], bind_new)
+
+
+
+                # create new rule, add it to rules list in kb if not a repeat
+                rule_new = Rule([lhs_new, rhs_new], [[fact, rule]])
+                '''
+                repeat = False
+                for i in range(len(kb.rules)):
+                    if rule_new == kb.rules[i]:
+                        repeat = True
+                if not repeat:
+                    kb.rules.append(rule_new)
+                '''
+
+                kb.kb_assert(rule_new)
+                # print('RULE ADDED: ' + str(rule_new))
+
+                # update supports_rules in fact, rule
+                fact.supports_rules.append(rule_new)
+                rule.supports_rules.append(rule_new)
