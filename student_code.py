@@ -130,10 +130,11 @@ class KnowledgeBase(object):
         # Student code goes here
 
         if fact.asserted and len(fact.supported_by) == 0:
-            queue = [fact]
+
+            queue = [self._get_fact(fact)]
 
             while len(queue) > 0:
-                print(queue)
+
                 temp = []
                 for f in self.facts: # index through facts
                     for i in range(len(f.supported_by)): # index through supported_by within each fact
@@ -158,20 +159,21 @@ class KnowledgeBase(object):
                         queue.append(temp[i])
 
                 # delete the current fact/rule from the kb
-                if type(queue[0]) == Fact:
-                    print(type(queue[0]))
-
-                    for i in range(len(self.facts)):
-                        if queue[0] == self.facts[i]:
-                            self.facts.pop(i)
-
                 if type(queue[0]) == Rule:
                     for i in range(len(self.rules)):
                         if queue[0] == self.rules[i]:
                             self.rules.pop(i)
+                            break
+                elif type(queue[0]) == Fact:
+                    for i in range(len(self.facts)):
+                        if queue[0] == self.facts[i]:
+                            self.facts.pop(i)
+                            break
+
+
 
                 # remove from the queue
-                queue = queue[1:]
+                queue.pop(0)
 
 class InferenceEngine(object):
     def fc_infer(self, fact, rule, kb):

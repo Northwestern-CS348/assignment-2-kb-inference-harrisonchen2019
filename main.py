@@ -40,7 +40,7 @@ class KBTest(unittest.TestCase):
         answer = self.KB.kb_ask(ask1)
         self.assertEqual(len(answer), 1)
         self.assertEqual(str(answer[0]), "?X : felix")
-'''
+
     def test4(self):
         # makes sure retract does not retract supported fact
         ask1 = read.parse_input("fact: (grandmotherof ada ?X)")
@@ -57,7 +57,7 @@ class KBTest(unittest.TestCase):
         answer = self.KB.kb_ask(ask1)
         self.assertEqual(str(answer[0]), "?X : felix")
         self.assertEqual(str(answer[1]), "?X : chen")
-        
+
     def test5(self):
         # makes sure retract does not deal with rules
         ask1 = read.parse_input("fact: (parentof ada ?X)")
@@ -70,7 +70,7 @@ class KBTest(unittest.TestCase):
         print(' Asking if', ask1)
         answer = self.KB.kb_ask(ask1)
         self.assertEqual(str(answer[0]), "?X : bing")
-'''
+
 
 def pprint_justification(answer):
     """Pretty prints (hence pprint) justifications for the answer.
