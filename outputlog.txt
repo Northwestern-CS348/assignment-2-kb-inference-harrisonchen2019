@@ -1,0 +1,32 @@
+TESTS WITH ERRORS 
+test12 (gradingtests.UnitTests)
+Traceback (most recent call last):
+  File "/Users/k2i/academics/automatedgradingapp/app/testing/kb-inference/gradingtests.py", line 351, in test12
+    self.assertTrue(str(answer1[0]).startswith("No bindings"))
+IndexError: list index out of range
+
+test13 (gradingtests.UnitTests)
+Traceback (most recent call last):
+  File "/Users/k2i/academics/automatedgradingapp/app/testing/kb-inference/gradingtests.py", line 373, in test13
+    self.assertTrue(str(answer1[0]).startswith("No bindings"))
+IndexError: list index out of range
+
+test5 (gradingtests.UnitTests)
+Traceback (most recent call last):
+  File "/Users/k2i/academics/automatedgradingapp/app/testing/kb-inference/gradingtests.py", line 138, in test5
+    KB2.kb_retract(fact21)
+  File "/Users/k2i/academics/automatedgradingapp/app/testing/kb-inference/student_code.py", line 141, in kb_retract
+    if queue[0] in f.supported_by[i]: # check first element in the pair
+IndexError: list index out of range
+
+-------------------------------
+TESTS FAILED  
+test10 (gradingtests.UnitTests)
+Traceback (most recent call last):
+  File "/Users/k2i/academics/automatedgradingapp/app/testing/kb-inference/gradingtests.py", line 282, in test10
+    self.assertFalse(answer2)
+AssertionError: True is not false
+
+-------------------------------
+TESTS SKIPPED 
+-------------------------------
